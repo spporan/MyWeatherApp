@@ -1,6 +1,7 @@
 package poran.cse.myweatherapp.data.repository
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import poran.cse.myweatherapp.data.mappers.toWeatherInfo
 import poran.cse.myweatherapp.data.remote.WeatherApi
@@ -15,10 +16,13 @@ class WeatherRepositoryImpl @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getWeatherData(lat: Double, long: Double): Resource<WeatherInfo> {
         return try {
+            val data = api.getWeatherData(lat, long)
+            Log.d("TTT", "data $data")
             Resource.Success(
-                data = api.getWeatherData(lat, long).toWeatherInfo()
+                data = data.toWeatherInfo()
             )
         } catch (e: Exception) {
+            e.printStackTrace()
             Resource.Error(message = e.message ?: "Unknown error")
         }
     }
